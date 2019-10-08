@@ -94,8 +94,8 @@ class BaseTeams:
 
     def _get_number_of_smaller_teams(self, number_of_students):
         # get the a
-        max_team_size = self._get_max_team_size(number_of_students)
-        return abs(number_of_students % (-1 * max_team_size))
+        total_teams = self._get_total_teams(number_of_students)
+        return abs(number_of_students % (-1 * total_teams))
 
     def _get_max_team_size(self, number_of_students):
         if self.team_size:
