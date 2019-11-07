@@ -62,6 +62,8 @@ class BaseTeams:
         if self.total_teams:
             return self.total_teams
         elif self.team_size:
+            if self.team_size >= number_of_students:
+                return 1
             return int(math.ceil(float(number_of_students) / float(self.team_size)))
         else:
             raise Exception('team_size or total_teams required for this algorithm')
@@ -69,41 +71,15 @@ class BaseTeams:
     def get_team_sizes(self, number_of_students):
         team_sizes = []
 
-        max_team_size = self._get_max_team_size(number_of_students)
-        total_teams = self._get_total_teams(number_of_students)
-        number_of_smaller_teams = self._get_number_of_smaller_teams(number_of_students)
+        number_of_teams = self._get_total_teams(number_of_students)
 
-        for _ in range(total_teams):
-            team_size = max_team_size
-
-            if number_of_smaller_teams > 0:
-                team_size -= 1
-                number_of_smaller_teams -= 1
-
-            if number_of_students == 0:
-                break
-            elif team_size == 0:
-                continue
-            elif team_size > number_of_students:
-                team_size = number_of_students
-
-            number_of_students -= team_size
-            team_sizes.append(team_size)
+        for i in range(number_of_students):
+            if i < number_of_teams:
+                team_sizes.append(1)
+            else:
+                team_sizes[i % number_of_teams] += 1
 
         return team_sizes
-
-    def _get_number_of_smaller_teams(self, number_of_students):
-        # get the a
-        total_teams = self._get_total_teams(number_of_students)
-        return abs(number_of_students % (-1 * total_teams))
-
-    def _get_max_team_size(self, number_of_students):
-        if self.team_size:
-            return self.team_size
-        elif self.total_teams:
-            return int(math.ceil(float(number_of_students) / float(self.total_teams)))
-        else:
-            raise Exception('team_size or total_teams required for this algorithm')
 
     def _group_name(self, section_name, index):
         if section_name:
